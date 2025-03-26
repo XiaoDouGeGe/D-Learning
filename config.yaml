@@ -1,0 +1,4 @@
+server_port: "8899"
+resource_dir: "./res/"
+# db_driver: "sqlite3"
+# db_source: "./party.db"
