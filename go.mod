@@ -6,6 +6,7 @@ require (
 	github.com/go-xorm/xorm v0.7.9
 	github.com/kataras/iris/v12 v12.2.11
 	github.com/lib/pq v1.0.0
+	github.com/sashabaranov/go-openai v1.38.1
 	gopkg.in/yaml.v3 v3.0.1
 	xorm.io/core v0.7.3
 )

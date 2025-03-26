@@ -45,3 +45,41 @@ func (cc *ChatController) GetList() mvc.Result {
 		},
 	}
 }
+
+func (cc *ChatController) PostSend() mvc.Result {
+	/**
+	userIdStr := cc.Ctx.PostValue("userId")
+	courseIdStr := cc.Ctx.PostValue("courseId")
+	content := cc.Ctx.PostValue("sendContent")
+	userId, _ := strconv.Atoi(userIdStr)
+	courseId, _ := strconv.Atoi(courseIdStr)
+
+	fmt.Println("=============")
+	fmt.Println(userId, courseId)
+	fmt.Println(content)
+	fmt.Println("=============")
+	*/
+
+	userId := cc.Ctx.PostValueIntDefault("userId", -1)
+	courseId := cc.Ctx.PostValueIntDefault("courseId", -1)
+	content := cc.Ctx.PostValue("sendContent")
+
+	receiveContent, err := cc.ChatService.SendContent(userId, courseId, content)
+
+	data := make(map[string]interface{})
+
+	if err == nil {
+		data["isOK"] = true
+		data["receiveContent"] = receiveContent
+	} else {
+		data["isOK"] = false
+		data["receiveContent"] = ""
+	}
+
+	return mvc.Response{
+		Object: map[string]interface{}{
+			"errorno": 0,
+			"data":    data,
+		},
+	}
+}

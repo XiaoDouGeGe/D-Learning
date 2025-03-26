@@ -8,7 +8,7 @@ import (
 
 type ChapterService interface {
 	ChapterList(courseId int) []models.Chapter
-	GetContent(chapterId int) string
+	GetContent(chapterId int) (string, string)
 }
 
 type chapterService struct {
@@ -33,16 +33,17 @@ func (cs *chapterService) ChapterList(courseId int) []models.Chapter {
 	return chapterList
 }
 
-func (cs *chapterService) GetContent(chapterId int) string {
-	content := ""
+func (cs *chapterService) GetContent(chapterId int) (string, string) {
+	title, content := "", ""
 
 	item := models.Chapter{Id: chapterId}
 	get, _ := cs.engine.Get(&item)
 	// fmt.Println(get)
-	if get { // 已有，更新
+	if get { // 已有
 		// fmt.Println(item.ChapterContent)
+		title = item.ChapterTitle
 		content = item.ChapterContent
 	}
 
-	return content
+	return title, content
 }
