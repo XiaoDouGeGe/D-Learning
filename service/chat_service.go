@@ -39,8 +39,10 @@ func (cs *chatService) ChatList(userId int, courseId int) []models.Chat {
 func (cs *chatService) SendContent(userId int, courseId int, content string) (string, error) {
 
 	// 创建客户端配置
-	cfg := openai.DefaultConfig("YOUR_API_KEY")
-	cfg.BaseURL = "http://10.10.185.2:30003/v1"
+	api_key, base_url := "b3ea194e-7be9-45e5-b7dd-aae02190161b", "https://api-inference.modelscope.cn/v1/"
+	// api_key, base_url := "123456", "http://10.10.185.2:30003/v1"
+	cfg := openai.DefaultConfig(api_key)
+	cfg.BaseURL = base_url
 
 	// 使用自定义配置创建客户端
 	client := openai.NewClientWithConfig(cfg)
@@ -74,7 +76,8 @@ func (cs *chatService) SendContent(userId int, courseId int, content string) (st
 
 	// 创建聊天请求
 	req := openai.ChatCompletionRequest{
-		Model:    openai.GPT3Dot5Turbo,
+		// Model:    openai.GPT3Dot5Turbo,
+		Model:    "deepseek-ai/DeepSeek-R1",
 		Messages: messages,
 	}
 
@@ -85,26 +88,30 @@ func (cs *chatService) SendContent(userId int, courseId int, content string) (st
 	}
 
 	// 输出响应内容
+	receive := ""
 	// fmt.Println(resp.Choices[0].Message.Content)
-	res := strings.Split(resp.Choices[0].Message.Content, "</think>")
-	if len(res) >= 2 {
-		// fmt.Println("=============")
-		// fmt.Println(strings.TrimSpace(res[len(res)-1]))
-		// fmt.Println("=============")
+	if strings.Contains(resp.Choices[0].Message.Content, "</think>") {
+		res := strings.Split(resp.Choices[0].Message.Content, "</think>")
+		if len(res) >= 2 {
+			// fmt.Println("=============")
+			// fmt.Println(strings.TrimSpace(res[len(res)-1]))
+			// fmt.Println("=============")
 
-		receive := strings.TrimSpace(res[len(res)-1])
-
-		// 1.存到数据库
-		chatRow := models.Chat{UserId: userId, CourseId: courseId, Role: "assistant", Content: receive}
-		_, err := cs.engine.Insert(&chatRow)
-		fmt.Println(chatRow.Id)
-		if err != nil {
-			fmt.Println(err.Error())
+			receive = strings.TrimSpace(res[len(res)-1])
 		}
-
-		// 2.返回给接口
-		return receive, nil
+	} else {
+		receive = resp.Choices[0].Message.Content
 	}
 
-	return "", nil
+	// 1.存到数据库
+	chatRow2 := models.Chat{UserId: userId, CourseId: courseId, Role: "assistant", Content: receive}
+	_, err2 := cs.engine.Insert(&chatRow2)
+	fmt.Println(chatRow2.Id)
+	if err2 != nil {
+		fmt.Println(err2.Error())
+	}
+
+	// 2.返回给接口
+	return receive, nil
+
 }
