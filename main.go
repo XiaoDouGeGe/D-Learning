@@ -74,6 +74,9 @@ func mvcHandle(app *iris.Application) {
 	chapterService := service.NewChapterService(engine)
 	progressService := service.NewProgressService(engine)
 	chatService := service.NewChatService(engine)
+	questionService := service.NewQuestionService(engine)
+	choiceService := service.NewChoiceService(engine)
+	exerciseService := service.NewExerciseService(engine)
 
 	user := mvc.New(app.Party("/api/user"))
 	user.Register(userService)
@@ -94,6 +97,15 @@ func mvcHandle(app *iris.Application) {
 	chat := mvc.New(app.Party("/api/chat"))
 	chat.Register(chatService)
 	chat.Handle(new(controller.ChatController))
+
+	question := mvc.New(app.Party("/api/question"))
+	question.Register(questionService, choiceService)
+	question.Handle(new(controller.QuestionController))
+
+	exercise := mvc.New(app.Party("/api/exercise"))
+	exercise.Register(exerciseService, chapterService)
+	exercise.Handle(new(controller.ExerciseController))
+
 }
 
 /**

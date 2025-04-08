@@ -39,6 +39,9 @@ func NewEngine() *xorm.Engine {
 		new(models.Chapter),
 		new(models.Progress),
 		new(models.Chat),
+		new(models.Question),
+		new(models.Choice),
+		new(models.Exercise),
 	)
 	if err != nil {
 		panic(err.Error())

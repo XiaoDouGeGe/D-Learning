@@ -4,5 +4,6 @@
 √ course: list
 √ chapter: content
 √ progress: update
-x chat: list
+√ chat: list、send
+
 

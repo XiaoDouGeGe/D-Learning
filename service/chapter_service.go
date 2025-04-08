@@ -9,6 +9,7 @@ import (
 type ChapterService interface {
 	ChapterList(courseId int) []models.Chapter
 	GetContent(chapterId int) (string, string)
+	GetChapterName(chapterId int) (string, string)
 }
 
 type chapterService struct {
@@ -46,4 +47,23 @@ func (cs *chapterService) GetContent(chapterId int) (string, string) {
 	}
 
 	return title, content
+}
+
+// 根据chapterId，获取章节名称和课程名称
+func (cs *chapterService) GetChapterName(chapterId int) (string, string) {
+	title, courseName := "", ""
+
+	chapterItem := models.Chapter{Id: chapterId}
+	get1, _ := cs.engine.Get(&chapterItem)
+	if get1 { // 已有
+		title = chapterItem.ChapterTitle
+		// 根据courseId获取课程名称
+		courseItem := models.Course{Id: chapterItem.CourseId}
+		get2, _ := cs.engine.Get(&courseItem)
+		if get2 {
+			courseName = courseItem.CourseName
+		}
+	}
+
+	return title, courseName
 }
