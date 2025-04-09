@@ -10,6 +10,7 @@ type ChapterService interface {
 	ChapterList(courseId int) []models.Chapter
 	GetContent(chapterId int) (string, string)
 	GetChapterName(chapterId int) (string, string)
+	AddChapter(chapterTitle string, chapterContent string, courseId int) bool
 }
 
 type chapterService struct {
@@ -66,4 +67,15 @@ func (cs *chapterService) GetChapterName(chapterId int) (string, string) {
 	}
 
 	return title, courseName
+}
+
+// 新增章节
+func (cs *chapterService) AddChapter(chapterTitle string, chapterContent string, courseId int) bool {
+	chapter := models.Chapter{
+		ChapterTitle:   chapterTitle,
+		ChapterContent: chapterContent,
+		CourseId:       courseId,
+	}
+	_, err := cs.engine.Insert(&chapter)
+	return err == nil
 }

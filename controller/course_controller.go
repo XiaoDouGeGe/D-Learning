@@ -70,3 +70,33 @@ func (cc *CourseController) GetList() mvc.Result {
 		},
 	}
 }
+
+func (cc *CourseController) PostAdd() mvc.Result {
+	courseName := cc.Ctx.PostValue("courseName")
+	courseDesc := cc.Ctx.PostValue("courseDesc")
+
+	if courseName == "" || courseDesc == "" {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 1,
+				"msg":     "课程名称和描述不能为空",
+			},
+		}
+	}
+
+	if cc.CourseService.AddCourse(courseName, courseDesc) {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 0,
+				"msg":     "添加成功",
+			},
+		}
+	} else {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 1,
+				"msg":     "添加失败",
+			},
+		}
+	}
+}

@@ -31,3 +31,36 @@ func (cc *ChapterController) GetContent() mvc.Result {
 		},
 	}
 }
+
+// 新增章节
+func (cc *ChapterController) PostAdd() mvc.Result {
+	courseId := cc.Ctx.PostValueIntDefault("courseId", 0)
+	chapterTitle := cc.Ctx.PostValue("chapterTitle")
+	chapterContent := cc.Ctx.PostValue("chapterContent")
+
+	if chapterTitle == "" || chapterContent == "" {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 1,
+				"msg":     "章节标题或内容不能为空",
+			},
+		}
+	}
+
+	ok := cc.ChapterService.AddChapter(chapterTitle, chapterContent, courseId)
+	if ok {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 0,
+				"msg":     "新增章节成功",
+			},
+		}
+	} else {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 1,
+				"msg":     "新增章节失败",
+			},
+		}
+	}
+}

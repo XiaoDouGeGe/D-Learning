@@ -8,6 +8,7 @@ import (
 
 type CourseService interface {
 	CourseList() []models.Course
+	AddCourse(courseName string, courseDesc string) bool
 }
 
 type courseService struct {
@@ -27,4 +28,14 @@ func (cs *courseService) CourseList() []models.Course {
 		return courseList
 	}
 	return courseList
+}
+
+// 新增课程
+func (cs *courseService) AddCourse(courseName string, courseDesc string) bool {
+	course := models.Course{
+		CourseName: courseName,
+		CourseDesc: courseDesc,
+	}
+	_, err := cs.engine.Insert(&course)
+	return err == nil
 }
