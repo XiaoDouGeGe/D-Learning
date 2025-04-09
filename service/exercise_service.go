@@ -42,6 +42,7 @@ func (es *exerciseService) CalculateScore(content string) (int, error) {
 	var data []map[string]interface{}
 	err := json.Unmarshal([]byte(content), &data)
 	if err != nil {
+		fmt.Println("Error unmarshalling JSON:", err)
 		return 0, err
 	}
 	for _, d := range data {
@@ -49,14 +50,18 @@ func (es *exerciseService) CalculateScore(content string) (int, error) {
 		uAnswer := d["uAnswer"]
 
 		// 这里需要根据题目ID查询正确答案
-		if num, ok := qId.(int); ok {
-			qItem := models.Question{Id: num}
+		// fmt.Printf("qId的类型是: %T\n", qId)  // float64
+		if num, ok := qId.(float64); ok {
+			// fmt.Println(num)
+			qItem := models.Question{Id: int(num)}
 			get, err := es.engine.Get(&qItem)
 			if get && err == nil {
 				if qItem.Answer == uAnswer {
 					eScore += qItem.Mark
 				}
 			}
+		} else {
+			fmt.Println("qId is not an int")
 		}
 	}
 
@@ -66,7 +71,12 @@ func (es *exerciseService) CalculateScore(content string) (int, error) {
 // 获取练习列表
 func (es *exerciseService) GetExerciseList(userId int) []models.Exercise {
 	exerciseList := make([]models.Exercise, 0)
-	err := es.engine.Where("user_id = ?", userId).OrderBy("-id").Find(&exerciseList)
+	var err error
+	if userId == 0 {
+		err = es.engine.OrderBy("-id").Find(&exerciseList)
+	} else {
+		err = es.engine.Where("user_id = ?", userId).OrderBy("-id").Find(&exerciseList)
+	}
 	if err != nil {
 		return exerciseList
 	}
@@ -102,8 +112,8 @@ func (es *exerciseService) GetExerciseDetail(exId int) map[string]interface{} {
 		// uAnswer := d["uAnswer"]
 
 		// 问题及答案
-		if num, ok := qId.(int); ok {
-			qItem := models.Question{Id: num}
+		if num, ok := qId.(float64); ok {
+			qItem := models.Question{Id: int(num)}
 			get2, err := es.engine.Get(&qItem)
 			if get2 && err == nil {
 				d["qContent"] = qItem.Qcontent
@@ -114,7 +124,7 @@ func (es *exerciseService) GetExerciseDetail(exId int) map[string]interface{} {
 
 				// 获取选项
 				var choices []map[string]string
-				cItem := models.Choice{QuestionId: num}
+				cItem := models.Choice{QuestionId: int(num)}
 				get3, _ := es.engine.Get(&cItem)
 				if get3 { // 存在
 					if cItem.AShow == 1 {

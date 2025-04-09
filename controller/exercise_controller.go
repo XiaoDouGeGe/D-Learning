@@ -49,7 +49,7 @@ func (ec *ExerciseController) PostCommit() mvc.Result {
 }
 
 func (ec *ExerciseController) GetList() mvc.Result {
-	userId, err := ec.Ctx.URLParamInt("userId")
+	userId, err := ec.Ctx.URLParamInt("userId") // userId=0 表示所有用户
 	if err != nil {
 		userId = -1
 	}
