@@ -53,3 +53,33 @@ func (qc *QuestionController) GetRandomQuestions() mvc.Result {
 		},
 	}
 }
+
+// 新增题目和选项
+func (qc *QuestionController) PostAdd() mvc.Result {
+	chapterId := qc.Ctx.PostValueIntDefault("chapterId", 0)
+	qContent := qc.Ctx.PostValue("qContent")
+	qType := qc.Ctx.PostValue("qType")
+	qAnswer := qc.Ctx.PostValue("qAnswer")
+	qAnalysis := qc.Ctx.PostValue("qAnalysis")
+	mark := qc.Ctx.PostValueIntDefault("mark", 0)
+
+	aShow := qc.Ctx.PostValueIntDefault("aShow", 0)
+	bShow := qc.Ctx.PostValueIntDefault("bShow", 0)
+	cShow := qc.Ctx.PostValueIntDefault("cShow", 0)
+	dShow := qc.Ctx.PostValueIntDefault("dShow", 0)
+
+	aContent := qc.Ctx.PostValue("aContent")
+	bContent := qc.Ctx.PostValue("bContent")
+	cContent := qc.Ctx.PostValue("cContent")
+	dContent := qc.Ctx.PostValue("dContent")
+
+	qc.QuestionService.AddQuestion(chapterId, qContent, qType, qAnswer, qAnalysis, mark,
+		aShow, bShow, cShow, dShow, aContent, bContent, cContent, dContent)
+
+	return mvc.Response{
+		Object: map[string]interface{}{
+			"errorno": 0,
+			"msg":     "ok",
+		},
+	}
+}

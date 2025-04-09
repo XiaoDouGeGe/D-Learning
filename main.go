@@ -103,7 +103,7 @@ func mvcHandle(app *iris.Application) {
 	question.Handle(new(controller.QuestionController))
 
 	exercise := mvc.New(app.Party("/api/exercise"))
-	exercise.Register(exerciseService, chapterService)
+	exercise.Register(exerciseService, chapterService, userService)
 	exercise.Handle(new(controller.ExerciseController))
 
 }

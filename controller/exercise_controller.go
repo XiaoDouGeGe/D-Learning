@@ -12,6 +12,7 @@ type ExerciseController struct {
 	Ctx            iris.Context
 	Service        service.ExerciseService
 	ChapterService service.ChapterService
+	UserService    service.UserService
 }
 
 func (ec *ExerciseController) PostCommit() mvc.Result {
@@ -61,6 +62,7 @@ func (ec *ExerciseController) GetList() mvc.Result {
 		exItem := make(map[string]interface{})
 		exItem["id"] = ex.Id
 		exItem["userId"] = ex.UserId
+		exItem["userName"] = ec.UserService.GetUserNameById(ex.UserId)
 		// exItem["chapterId"] = ex.ChapterId
 		// exItem["content"] = ex.Content
 		exItem["score"] = ex.Score

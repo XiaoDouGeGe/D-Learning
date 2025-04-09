@@ -15,10 +15,11 @@ type UserController struct {
 func (us *UserController) PostLogin() mvc.Result {
 	username := us.Ctx.PostValue("username")
 	password := us.Ctx.PostValue("password")
-	userId, isSuccess, err := us.Service.Login(username, password)
+	userId, isSuccess, secret, err := us.Service.Login(username, password)
 	data := make(map[string]interface{})
 	data["userId"] = userId
 	data["isSuccess"] = isSuccess
+	data["secret"] = secret
 	data["err"] = err
 	if !isSuccess {
 		return mvc.Response{
