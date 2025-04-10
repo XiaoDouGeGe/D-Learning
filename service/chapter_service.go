@@ -11,6 +11,7 @@ type ChapterService interface {
 	GetContent(chapterId int) (string, string)
 	GetChapterName(chapterId int) (string, string)
 	AddChapter(chapterTitle string, chapterContent string, courseId int) bool
+	DeleteChapter(chapterId int) bool
 }
 
 type chapterService struct {
@@ -77,5 +78,12 @@ func (cs *chapterService) AddChapter(chapterTitle string, chapterContent string,
 		CourseId:       courseId,
 	}
 	_, err := cs.engine.Insert(&chapter)
+	return err == nil
+}
+
+// 删除章节
+func (cs *chapterService) DeleteChapter(chapterId int) bool {
+	chapter := models.Chapter{Status: "N"}
+	_, err := cs.engine.Where(" id = ? ", chapterId).Update(&chapter)
 	return err == nil
 }

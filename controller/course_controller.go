@@ -100,3 +100,33 @@ func (cc *CourseController) PostAdd() mvc.Result {
 		}
 	}
 }
+
+// 删除课程
+func (cc *CourseController) PostDelete() mvc.Result {
+	courseId := cc.Ctx.PostValueIntDefault("courseId", 0)
+	if courseId == 0 {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 1,
+				"msg":     "课程ID不能为空",
+			},
+		}
+	}
+
+	ok := cc.CourseService.DeleteCourse(courseId)
+	if ok {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 0,
+				"msg":     "删除成功",
+			},
+		}
+	} else {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 1,
+				"msg":     "删除失败",
+			},
+		}
+	}
+}

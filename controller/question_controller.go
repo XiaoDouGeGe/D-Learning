@@ -120,3 +120,33 @@ func (qc *QuestionController) GetList() mvc.Result {
 		},
 	}
 }
+
+// 删除题目
+func (qc *QuestionController) PostDelete() mvc.Result {
+	questionId := qc.Ctx.PostValueIntDefault("questionId", 0)
+	if questionId == 0 {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 1,
+				"msg":     "题目ID不能为空",
+			},
+		}
+	}
+
+	ok := qc.QuestionService.DeleteQuestion(questionId)
+	if ok {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 0,
+				"msg":     "删除成功",
+			},
+		}
+	} else {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 1,
+				"msg":     "删除失败",
+			},
+		}
+	}
+}

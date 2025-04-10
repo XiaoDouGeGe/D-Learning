@@ -13,6 +13,7 @@ type QuestionService interface {
 	AddQuestion(chapterId int, qContent string, qType string, qAnswer string, qAnalysis string, mark int,
 		aShow int, bShow int, cShow int, dShow int, aContent string, bContent string,
 		cContent string, dContent string) bool
+	DeleteQuestion(questionId int) bool
 }
 
 type questionService struct {
@@ -77,4 +78,11 @@ func (qs *questionService) RandomQuestionList(chapterId int, num int) []models.Q
 		return questionList
 	}
 	return questionList
+}
+
+// 删除题目
+func (qs *questionService) DeleteQuestion(questionId int) bool {
+	question := models.Question{Status: "N"}
+	_, err := qs.engine.Where(" id = ? ", questionId).Update(&question)
+	return err == nil
 }

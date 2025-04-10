@@ -9,6 +9,7 @@ import (
 type CourseService interface {
 	CourseList() []models.Course
 	AddCourse(courseName string, courseDesc string) bool
+	DeleteCourse(courseId int) bool
 }
 
 type courseService struct {
@@ -37,5 +38,12 @@ func (cs *courseService) AddCourse(courseName string, courseDesc string) bool {
 		CourseDesc: courseDesc,
 	}
 	_, err := cs.engine.Insert(&course)
+	return err == nil
+}
+
+// 删除课程
+func (cs *courseService) DeleteCourse(courseId int) bool {
+	course := models.Course{Status: "N"}
+	_, err := cs.engine.Where(" id = ? ", courseId).Update(&course)
 	return err == nil
 }

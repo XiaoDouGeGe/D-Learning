@@ -64,3 +64,33 @@ func (cc *ChapterController) PostAdd() mvc.Result {
 		}
 	}
 }
+
+// 删除章节
+func (cc *ChapterController) PostDelete() mvc.Result {
+	chapterId := cc.Ctx.PostValueIntDefault("chapterId", 0)
+	if chapterId == 0 {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 1,
+				"msg":     "章节ID不能为空",
+			},
+		}
+	}
+
+	ok := cc.ChapterService.DeleteChapter(chapterId)
+	if ok {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 0,
+				"msg":     "删除章节成功",
+			},
+		}
+	} else {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"errorno": 1,
+				"msg":     "删除章节失败",
+			},
+		}
+	}
+}
