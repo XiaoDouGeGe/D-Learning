@@ -36,6 +36,7 @@ func (cs *courseService) AddCourse(courseName string, courseDesc string) bool {
 	course := models.Course{
 		CourseName: courseName,
 		CourseDesc: courseDesc,
+		Status:     "Y",
 	}
 	_, err := cs.engine.Insert(&course)
 	return err == nil

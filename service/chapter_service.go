@@ -76,6 +76,7 @@ func (cs *chapterService) AddChapter(chapterTitle string, chapterContent string,
 		ChapterTitle:   chapterTitle,
 		ChapterContent: chapterContent,
 		CourseId:       courseId,
+		Status:         "Y",
 	}
 	_, err := cs.engine.Insert(&chapter)
 	return err == nil

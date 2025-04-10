@@ -38,6 +38,7 @@ func (qs *questionService) AddQuestion(chapterId int, qContent string, qType str
 		Answer:    qAnswer,
 		Analysis:  qAnalysis,
 		Mark:      mark,
+		Status:    "Y",
 	}
 	_, err1 := qs.engine.Insert(&question)
 	fmt.Println(question.Id)
@@ -54,6 +55,7 @@ func (qs *questionService) AddQuestion(chapterId int, qContent string, qType str
 		BShow:      bShow,
 		CShow:      cShow,
 		DShow:      dShow,
+		Status:     "Y",
 	}
 	_, err2 := qs.engine.Insert(&choice)
 	fmt.Println(choice.Id)
