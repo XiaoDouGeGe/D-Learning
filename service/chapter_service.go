@@ -26,7 +26,7 @@ func NewChapterService(engine *xorm.Engine) *chapterService {
 func (cs *chapterService) ChapterList(courseId int) []models.Chapter {
 	chapterList := make([]models.Chapter, 0)
 	// err := cs.engine.Where(" course_id = ? ", strconv.Itoa(courseId)).OrderBy("id").Find(&chapterList)
-	err := cs.engine.Where(" course_id = ? ", courseId).OrderBy("id").Find(&chapterList)
+	err := cs.engine.Where(" status = 'Y' ").Where(" course_id = ? ", courseId).OrderBy("id").Find(&chapterList)
 	// err := cs.engine.OrderBy("id").Find(&chapterList)
 
 	if err != nil {

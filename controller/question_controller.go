@@ -83,3 +83,40 @@ func (qc *QuestionController) PostAdd() mvc.Result {
 		},
 	}
 }
+
+// 根据chapterId查询问题列表
+func (qc *QuestionController) GetList() mvc.Result {
+	chapterId, err := qc.Ctx.URLParamInt("chapterId")
+	if err != nil {
+		chapterId = -1
+	}
+
+	questions := qc.QuestionService.QuestionListByChapterId(chapterId)
+
+	questionList := make([]map[string]interface{}, 0)
+
+	for _, question := range questions {
+		questionItem := make(map[string]interface{})
+		questionItem["id"] = question.Id
+		questionItem["qContent"] = question.Qcontent
+		questionItem["qType"] = question.Qtype
+		questionItem["qAnswer"] = question.Answer
+		questionItem["qAnalysis"] = question.Analysis
+		questionItem["mark"] = question.Mark
+
+		// get choices
+		choice := qc.ChoiceService.GetChoice(question.Id)
+
+		questionItem["choices"] = choice
+
+		questionList = append(questionList, questionItem)
+	}
+
+	return mvc.Response{
+		Object: map[string]interface{}{
+			"errorno": 0,
+			"data":    questionList,
+			"msg":     "ok",
+		},
+	}
+}

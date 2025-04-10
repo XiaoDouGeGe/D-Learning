@@ -26,7 +26,7 @@ func NewUserService(engine *xorm.Engine) *userService {
 func (s *userService) Login(username, password string) (int, bool, string, error) {
 	username = strings.TrimSpace(username)
 	dbUser := models.User{Username: username, Password: password}
-	get, err := s.engine.Get(&dbUser)
+	get, err := s.engine.Where(" status = 'Y' ").Get(&dbUser)
 	if !get || err != nil {
 		return -1, false, "", err
 	}

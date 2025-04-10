@@ -5,5 +5,5 @@ type User struct {
 	Username string `xorm:"varchar(30) not null" json:"username"`
 	Password string `xorm:"varchar(128) not null" json:"-"`
 	Secret   string `xorm:"varchar(30)" json:"secret"`
-	Status   string `xorm:"varchar(10) not null" json:"status"`
+	Status   string `xorm:"varchar(10) default 'Y'" json:"status"`
 }

@@ -23,7 +23,7 @@ func NewCourseService(engine *xorm.Engine) *courseService {
 
 func (cs *courseService) CourseList() []models.Course {
 	courseList := make([]models.Course, 0)
-	err := cs.engine.OrderBy("id").Find(&courseList)
+	err := cs.engine.Where(" status = 'Y' ").OrderBy("id").Find(&courseList)
 	if err != nil {
 		return courseList
 	}

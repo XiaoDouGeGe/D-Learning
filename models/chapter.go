@@ -6,5 +6,5 @@ type Chapter struct {
 	ChapterIndex   int    `xorm:"INTEGER" json:"chapterIndex"` // 第几章节
 	ChapterTitle   string `xorm:"varchar(100)" json:"chapterTitle"`
 	ChapterContent string `xorm:"text" json:"chapterContent"`
-	Status         string `xorm:"varchar(50)" json:"status"`
+	Status         string `xorm:"varchar(50) default 'Y'" json:"status"`
 }

@@ -11,4 +11,5 @@ type Choice struct {
 	BShow      int    `xorm:"INTEGER default 1" json:"bShow"`     // B选项是否显示：1显示，0不显示
 	CShow      int    `xorm:"INTEGER default 1" json:"cShow"`     // C选项是否显示：1显示，0不显示
 	DShow      int    `xorm:"INTEGER default 1" json:"dShow"`     // D选项是否显示：1显示，0不显示
+	Status     string `xorm:"VARCHAR(50) default 'Y'" json:"status"`
 }

@@ -8,4 +8,5 @@ type Question struct {
 	Answer    string `xorm:"varchar(2)" json:"qAnswer"` // 答案
 	Analysis  string `xorm:"text" json:"qAnalysis"`     // 解析
 	Mark      int    `xorm:"INTEGER" json:"mark"`       // 分数
+	Status    string `xorm:"VARCHAR(50) default 'Y'" json:"status"`
 }

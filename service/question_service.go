@@ -63,7 +63,7 @@ func (qs *questionService) AddQuestion(chapterId int, qContent string, qType str
 
 func (qs *questionService) QuestionListByChapterId(chapterId int) []models.Question { // 不做分页处理
 	questionList := make([]models.Question, 0)
-	err := qs.engine.Where("chapter_id = ?", chapterId).OrderBy("id").Find(&questionList)
+	err := qs.engine.Where(" status = 'Y' ").Where("chapter_id = ?", chapterId).OrderBy("id").Find(&questionList)
 	if err != nil {
 		return questionList
 	}
@@ -72,7 +72,7 @@ func (qs *questionService) QuestionListByChapterId(chapterId int) []models.Quest
 
 func (qs *questionService) RandomQuestionList(chapterId int, num int) []models.Question { // 随机获取题目，数量为num
 	questionList := make([]models.Question, 0)
-	err := qs.engine.Where("chapter_id = ?", chapterId).OrderBy("id").Limit(num).Find(&questionList)
+	err := qs.engine.Where(" status = 'Y' ").Where("chapter_id = ?", chapterId).OrderBy("id").Limit(num).Find(&questionList)
 	if err != nil {
 		return questionList
 	}

@@ -26,7 +26,7 @@ func (cs *choiceService) GetChoice(questionId int) []map[string]string {
 
 	item := models.Choice{QuestionId: questionId}
 
-	get, _ := cs.engine.Get(&item)
+	get, _ := cs.engine.Where(" status = 'Y' ").Get(&item)
 
 	if get { // 存在
 		if item.AShow == 1 {
