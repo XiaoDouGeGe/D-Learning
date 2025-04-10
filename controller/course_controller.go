@@ -130,3 +130,54 @@ func (cc *CourseController) PostDelete() mvc.Result {
 		}
 	}
 }
+
+func (cc *CourseController) GetChapters() mvc.Result {
+
+	courseOne := make(map[string]interface{})
+
+	userId, err := cc.Ctx.URLParamInt("userId")
+	if err != nil {
+		userId = -1
+	}
+
+	courseId, err := cc.Ctx.URLParamInt("courseId")
+	if err != nil {
+		courseId = -1
+	}
+
+	completedNum, totalNum := 0, 0
+
+	chapters := cc.ChapterService.ChapterList(courseId)
+	chaptersList := make([]map[string]interface{}, 0)
+
+	for _, chapter := range chapters {
+		chapterItem := make(map[string]interface{})
+		chapterItem["id"] = chapter.Id
+		chapterItem["index"] = chapter.ChapterIndex
+		chapterItem["title"] = chapter.ChapterTitle
+		chapterItem["status"] = chapter.Status
+
+		// check progress
+		chapterItem["isCompleted"] = false
+		isCompleted := cc.ProgressService.IsCompleted(userId, chapter.Id)
+		if isCompleted {
+			completedNum++
+			chapterItem["isCompleted"] = true
+		}
+
+		chaptersList = append(chaptersList, chapterItem)
+	}
+
+	totalNum = len(chaptersList)
+
+	courseOne["chapters"] = chaptersList
+	courseOne["progress"] = strconv.Itoa(completedNum) + "/" + strconv.Itoa(totalNum)
+
+	return mvc.Response{
+		Object: map[string]interface{}{
+			"errorno": 0,
+			"data":    courseOne,
+		},
+	}
+
+}
